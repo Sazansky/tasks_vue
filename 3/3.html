@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>3</title>
+    <link rel="stylesheet" href="css/font-awesome.min.css">
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/style.css">
+    <script src="js/vue.js"></script>
+</head>
+<body>
+<div class="wrapper">
+    <div class="example">
+        <form
+            @submit.prevent="formSended"
+            v-if="!isSend"
+        >
+            <div class="progress">
+                <div
+                    class="progress-bar"
+                    :style="progressBar"
+                ></div>
+            </div>
+            
+            <div>
+                <comp-input
+                    v-for="(item, index) in info"
+                    :name="item.name"
+                    :value="item.value"
+                    :pattern="item.pattern"
+                    :key="index"
+                    @changedata="onChangeData(index, $event)"
+                >
+                </comp-input>
+            </div>
+
+            <button
+                class="btn btn-primary"
+                :disabled="done < info.length"
+            >
+                Send Data
+            </button>
+        </form>
+        
+        <div v-else>
+            <table class="table table-bordered">
+                <tr v-for="(item, index) in info">
+                    <td>{{ item.name }}</td>
+                    <td>{{ item.value }}</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script>
+
+    Vue.component('comp-input', {
+        props: {
+            name: {
+                type: String,
+                required: true
+            },
+            value: {
+                type: String,
+                required: true
+            },
+            pattern:{
+                type: RegExp,
+                required: true
+            }
+        },
+        template: `
+            <div class="form-group">
+                <label>{{ name }}</label>
+                <span
+                    v-if="activated"
+                    class="fa"
+                    :class="validClass"
+                >
+                </span>
+                <input
+                    type="text"
+                    class="form-control"
+                    :value="value"
+                    @input="onInput"
+                >
+            </div>
+        `,
+        data() {
+            return {
+                activated: this.value != ''
+            }
+        },
+        computed: {
+            validClass() {
+                return this.pattern.test(this.value) ?
+                    'fa-check-circle text-success' :
+                    'fa-exclamation-circle text-danger';
+            }
+        },
+        methods: {
+            onInput(e) {
+                this.activated = true;
+
+                this.$emit('changedata', {
+                    value: e.target.value,
+                    valid: this.pattern.test(e.target.value)
+                });
+            },
+        }
+    });
+
+    new Vue({
+        el: '.example',
+        data: {
+            info: [
+                {
+                    name: 'Name',
+                    value: '',
+                    pattern: /^[a-zA-Z ]{2,30}$/
+                },
+                {
+                    name: 'Phone',
+                    value: '',
+                    pattern: /^[0-9]{7,14}$/
+                },
+                {
+                    name: 'Email',
+                    value: '',
+                    pattern: /.+/
+                },
+                {
+                    name: 'Some Field 1',
+                    value: '',
+                    pattern: /.+/
+                },
+                {
+                    name: 'Some Field 2',
+                    value: '',
+                    pattern: /.+/
+                }
+            ],
+            controls: [],
+            isSend: false,
+            done: 0,
+        },
+        computed: {
+            progressBar() {
+                return {
+                    width: (this.done / this.info.length * 100) + '%'
+                }
+            }
+        },
+        methods: {
+            onChangeData(index, data) {
+                this.info[index].value = data.value;
+                this.controls[index] = data.valid;
+
+                let done = 0;
+
+                for(let i = 0; i < this.controls.length; i++) {
+                    if(this.controls[i]) {
+                        done++;
+                    }
+                }
+
+                this.done = done;
+            },
+            formSended() {
+                this.isSend = true
+            }
+        },
+        created() {
+            for(let i = 0; i < this.info.length; i++) {
+                this.controls.push(false);
+            }
+        }
+    });
+
+
+</script>
+</body>
+</html>
