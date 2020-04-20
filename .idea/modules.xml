@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/../../Lavrik Vue/5/.idea/3.iml" filepath="$PROJECT_DIR$/../../Lavrik Vue/5/.idea/3.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/tasks_vue.iml" filepath="$PROJECT_DIR$/.idea/tasks_vue.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../../Lavrik Vue/4/vue-l4-cli/.idea/vue-l4-cli.iml" filepath="$PROJECT_DIR$/../../Lavrik Vue/4/vue-l4-cli/.idea/vue-l4-cli.iml" />
+    </modules>
+  </component>
+</project>
